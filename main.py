@@ -9,7 +9,9 @@ SITE_NAME = 'https://news.ycombinator.com/'
 @app.route('/<path:path>')
 def proxy(path):
   resp = get(f'{SITE_NAME}{path}').text
-  resp = re.sub('''\b\w{6}(?![><"=:\/'#-])\b''', '!', resp)
+  words = re.findall('''[^\w><"=:\/'#-](\w{6})[^\w><"=:\/'#-]''', resp)
+  for i in words:
+    resp = resp.replace(i, i + '™')
 
   return Response(resp)
 
